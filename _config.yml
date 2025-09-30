@@ -25,7 +25,7 @@ author:
   # Biographic information
   avatar           : "profile.png"
   name             : "Xiang Li"
-  pronouns         : "he/him"  
+  pronouns         : # "he/him"  
   bio              : "Undergraduate Student"
   location         : "Nanjing, Jiangsu, China"
   employer         : "Nanjing University"
