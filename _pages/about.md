@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Xiang Li's personal website"
+title: "About Me"
 author_profile: true
 redirect_from: 
   - /about/
@@ -16,4 +16,5 @@ Hi! This is **Xiang Li**, a senior undergraduate student at the **Kuang Yaming H
 - 🌌 Deep Learning and LLMs
 
 Looking forward, I hope to contribute to advancing the theoretical foundations of machine learning while bridging them with practical advances in AI.  
+
 For more details, feel free to explore my [Publications](/publications), [Blog Posts](/posts), [Notebooks](/notebooks), and [CV](/cv).
