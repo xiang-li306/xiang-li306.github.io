@@ -9,7 +9,7 @@
 # Basic Site Settings
 locale                   : "en-US"
 site_theme               : "default" # Currently available options are "default", "air"
-title                    : "Xiang Li"
+title                    : "Xiang Li (李想)"
 title_separator          : "-"
 name                     : &name "Your Name"
 description              : &description "Your Name's academic portfolio"   # Update this with a general description of your site, this is the default if not overridden by a page
@@ -24,7 +24,7 @@ repository               : "xiang-li306/xiang-li306.github.io"
 author:
   # Biographic information
   avatar           : "profile.png"
-  name             : "Xiang Li"
+  name             : "Xiang Li (李想)"
   pronouns         : # "he/him"  
   bio              : "Undergraduate Student"
   location         : "Nanjing, Jiangsu, China"
