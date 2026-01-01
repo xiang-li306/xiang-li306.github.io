@@ -17,4 +17,4 @@ Hi! This is **Xiang Li**, a senior undergraduate student at the **Kuang Yaming H
 
 Looking forward, I hope to contribute to advancing the theoretical foundations of machine learning while bridging them with practical advances in AI.  
 
-For more details, feel free to explore my [Publications](/publications), [Blog Posts](/posts), [Notebooks](/notebooks), and [CV](/cv).
+I also maintain a [Bilibili Channel](https://space.bilibili.com/32773300?spm_id_from=333.1007.0.0) (in Chinese), uploading videos related to the theory of machine learning, reinforcement learning and relevant mathematics. Feel free to take a look!
