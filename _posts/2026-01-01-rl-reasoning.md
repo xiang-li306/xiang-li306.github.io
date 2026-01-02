@@ -5,7 +5,6 @@ permalink: /posts/2026/01/rl-reasoning/
 tags:
   - reinforcement learning
   - large language models
-
 ---
 
 
@@ -21,26 +20,27 @@ Sharpening or Discovery? The Role of RL in LLM Reasoning
 
 We begin with a brief recap of **Reinforcement Learning with Verifiable Rewards (RLVR)**. Conceptually, RLVR is closely related to RLHF: both apply reinforcement learning during LLM post-training. The key difference is that, in RLVR, the reward signal can be **automatically verified**, without relying on human preferences or learned reward models.
 
-For many tasks, such verifiable rewards arise naturally. In mathematics, the model’s predicted answer $\hat{y}$ can be directly compared against the ground-truth solution $y$: if the answer is correct, the reward is set to 1; otherwise, it is 0. In coding tasks, correctness can be determined via compilation or unit tests. When combined with chain-of-thought prompting, this setup makes it straightforward to evaluate whether a model’s reasoning ultimately leads to a correct outcome.
+For many tasks, such verifiable rewards arise naturally. In mathematics, the model’s predicted answer \\( \hat{y} \\) can be directly compared against the ground-truth solution \\( y \\): if the answer is correct, the reward is set to 1; otherwise, it is 0. In coding tasks, correctness can be determined via compilation or unit tests. When combined with chain-of-thought prompting, this setup makes it straightforward to evaluate whether a model’s reasoning ultimately leads to a correct outcome.
 
-Formally, we view a language model as a policy $\pi_\theta(y \mid x)$, where $x$ denotes an input prompt (e.g., a math problem) and $y = (y_1, \ldots, y_T)$ is the generated response. RLVR assumes access to a verifier $r(x, y) \in \{0, 1\}$, which checks whether the output is correct. Crucially, this reward is independent of human preferences or learned reward models; it depends only on whether the final answer matches a deterministic criterion. In this sense, RLVR uses an **outcome reward**, rather than a process-level reward that evaluates intermediate reasoning steps.
+Formally, we view a language model as a policy \\( \pi_\\theta(y \\mid x) \\), where \\( x \\) denotes an input prompt (e.g., a math problem) and \\( y = (y_1, \\ldots, y_T) \\) is the generated response. RLVR assumes access to a verifier \\( r(x, y) \\in \\{0, 1\\} \\), which checks whether the output is correct. Crucially, this reward is independent of human preferences or learned reward models; it depends only on whether the final answer matches a deterministic criterion. In this sense, RLVR uses an **outcome reward**, rather than a process-level reward that evaluates intermediate reasoning steps.
 
 In practice, RLVR is typically optimized with policy-gradient methods such as PPO, GRPO, REINFORCE++, or DAPO. As one concrete example, the DeepSeek models adopt **Group-Relative Policy Optimization (GRPO)**. GRPO optimizes the objective
-$$
-\mathcal{L}_{\mathrm{GRPO}}(\theta)=\mathbb{E}_{x \sim \mathcal{X},\, y \sim \pi_\theta(\cdot \mid x)}[\hat{A}(x, y)]-\beta \cdot \mathbb{E}_{x \sim \mathcal{X}}[\mathrm{KL}(\pi_\theta(\cdot \mid x)\,\|\,\pi_{\mathrm{ref}}(\cdot \mid x))].
-$$
+\\[
+\\mathcal{L}_{\\mathrm{GRPO}}(\\theta)=\\mathbb{E}_{x \\sim \\mathcal{X},\\, y \\sim \\pi_\\theta(\\cdot \\mid x)}[\\hat{A}(x, y)]-\\beta \\cdot \\mathbb{E}_{x \\sim \\mathcal{X}}[\\mathrm{KL}(\\pi_\\theta(\\cdot \\mid x)\\,\\|\\,\\pi_{\\mathrm{ref}}(\\cdot \\mid x))].
+\\]
 
 A few remarks help clarify this objective:
 
 - **Advantage estimation.**  
-  The term $\hat{A}(x, y)$ is an estimate of the advantage of a sampled response. While it is equivalent, in expectation, to maximizing reward, it substantially reduces variance. GRPO does not introduce a separate critic to estimate values. Instead, for a given prompt $x$, it samples a group of $G$ responses, obtains rewards $\{r_1, \ldots, r_G\}$, and computes a relative advantage
-  $$
-  \hat{A}(x, y)=\frac{r(x, y)-\mathrm{mean}(\{r_1, \ldots, r_G\})}{\mathrm{std}(\{r_1, \ldots, r_G\})}.
-  $$
+  The term \\( \\hat{A}(x, y) \\) is an estimate of the advantage of a sampled response. While it is equivalent, in expectation, to maximizing reward, it substantially reduces variance. GRPO does not introduce a separate critic to estimate values. Instead, for a given prompt \\( x \\), it samples a group of \\( G \\) responses, obtains rewards \\( \\{r_1, \\ldots, r_G\\} \\), and computes a relative advantage
+  \\[
+  \\hat{A}(x, y)=\\frac{r(x, y)-\\mathrm{mean}(\\{r_1, \\ldots, r_G\\})}{\\mathrm{std}(\\{r_1, \\ldots, r_G\\})}.
+  \\]
 
 - **Behavior regularization via KL.**  
-  As in PPO, the KL term constrains updates to stay close to a reference policy $\pi_{\mathrm{ref}}$, typically the pre-trained base model. This highlights a fundamental distinction between RL in LLMs and classical reinforcement learning. Traditional RL often starts from scratch and explicitly balances exploration and exploitation. In contrast, RL for LLMs begins from a strong pre-trained prior. While this prior is widely believed to be a major source of performance gains, it also imposes a potentially restrictive constraint—one that will become central to our later discussion.
+  As in PPO, the KL term constrains updates to stay close to a reference policy \\( \\pi_{\\mathrm{ref}} \\), typically the pre-trained base model. This highlights a fundamental distinction between RL in LLMs and classical reinforcement learning. Traditional RL often starts from scratch and explicitly balances exploration and exploitation. In contrast, RL for LLMs begins from a strong pre-trained prior. While this prior is widely believed to be a major source of performance gains, it also imposes a potentially restrictive constraint—one that will become central to our later discussion.
 
 - **On-policy learning with verifiable rewards.**  
   These algorithms learn exclusively from on-policy samples, i.e., responses generated by the current model. From the perspective of verifiable rewards, the training objective effectively increases the log-likelihood of responses with correct answers while decreasing the likelihood of incorrect ones.
+
 
