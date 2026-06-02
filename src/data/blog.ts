@@ -15,6 +15,16 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    title: "Understanding LLM Pre-Training and RL Fine-Tuning via Meta-Learning",
+    date: "2026-06",
+    summary:
+      "My undergraduate thesis, written in Chinese, studying LLM pre-training and RL fine-tuning through a meta-learning perspective.",
+    slug: "undergraduate-thesis-meta-learning",
+    type: "pdf",
+    href: "/notes/undergraduate-thesis/llm-pretraining-rl-finetuning-meta-learning.pdf",
+    tags: ["thesis", "Chinese", "LLM"],
+  },
+  {
     title: "Worries on AI",
     date: "2026-05",
     summary:
@@ -43,15 +53,5 @@ export const blogPosts: BlogPost[] = [
     type: "markdown",
     content: contextualMultinomialBandits,
     tags: ["bandits", "MNL", "theory"],
-  },
-  {
-    title: "Sample PDF Note",
-    date: "1999-01",
-    summary:
-      "A sample PDF note. For now, PDF notes download directly; a browser preview can be added later.",
-    slug: "sample-pdf",
-    type: "pdf",
-    href: "/notes/sample-pdf/template-note.pdf",
-    tags: ["pdf"],
   },
 ];
