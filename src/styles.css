@@ -45,6 +45,22 @@ a {
   margin: 2rem 0 0.75rem;
 }
 
+.markdown-body h3 {
+  color: #0f172a;
+  font-size: 1.12rem;
+  font-weight: 650;
+  line-height: 1.4;
+  margin: 1.5rem 0 0.6rem;
+}
+
+.markdown-body h4 {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.4;
+  margin: 1.25rem 0 0.5rem;
+}
+
 .markdown-body p {
   margin: 1rem 0;
 }
@@ -73,8 +89,20 @@ a {
   margin: 1rem 0 1rem 1.25rem;
 }
 
+.markdown-body ol {
+  list-style: decimal;
+  margin: 1rem 0 1rem 1.25rem;
+}
+
 .markdown-body li {
   margin: 0.35rem 0;
+}
+
+.markdown-body blockquote {
+  border-left: 3px solid #cbd5e1;
+  color: #475569;
+  margin: 1.25rem 0;
+  padding-left: 1rem;
 }
 
 .markdown-body img {
@@ -82,7 +110,19 @@ a {
   border-radius: 8px;
   display: block;
   margin: 1.5rem 0;
-  max-width: min(100%, 28rem);
+  width: 100%;
+}
+
+.markdown-body img[src$="#width-50"] {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.markdown-body img[src$="#width-70"] {
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
 }
 
 .markdown-body .math-block {

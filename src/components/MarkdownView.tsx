@@ -13,6 +13,7 @@ function inlineMarkdown(text: string) {
   return escapeHtml(text)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" />')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 }
@@ -21,7 +22,7 @@ function renderMarkdown(content: string) {
   const lines = content.split(/\r?\n/);
   const html: string[] = [];
   let paragraph: string[] = [];
-  let listOpen = false;
+  let listOpen: "ul" | "ol" | false = false;
   let mathOpen = false;
   let mathLines: string[] = [];
 
@@ -34,7 +35,7 @@ function renderMarkdown(content: string) {
 
   const closeList = () => {
     if (listOpen) {
-      html.push("</ul>");
+      html.push(`</${listOpen}>`);
       listOpen = false;
     }
   };
@@ -66,6 +67,20 @@ function renderMarkdown(content: string) {
       continue;
     }
 
+    if (trimmed.startsWith("#### ")) {
+      closeParagraph();
+      closeList();
+      html.push(`<h4>${inlineMarkdown(trimmed.slice(5))}</h4>`);
+      continue;
+    }
+
+    if (trimmed.startsWith("### ")) {
+      closeParagraph();
+      closeList();
+      html.push(`<h3>${inlineMarkdown(trimmed.slice(4))}</h3>`);
+      continue;
+    }
+
     if (trimmed.startsWith("## ")) {
       closeParagraph();
       closeList();
@@ -82,11 +97,38 @@ function renderMarkdown(content: string) {
 
     if (trimmed.startsWith("- ")) {
       closeParagraph();
+      if (listOpen && listOpen !== "ul") {
+        closeList();
+      }
       if (!listOpen) {
         html.push("<ul>");
-        listOpen = true;
+        listOpen = "ul";
       }
       html.push(`<li>${inlineMarkdown(trimmed.slice(2))}</li>`);
+      continue;
+    }
+
+    const orderedListMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+    if (orderedListMatch) {
+      closeParagraph();
+      if (listOpen && listOpen !== "ol") {
+        closeList();
+      }
+      if (!listOpen) {
+        html.push("<ol>");
+        listOpen = "ol";
+      }
+      html.push(`<li>${inlineMarkdown(orderedListMatch[1])}</li>`);
+      continue;
+    }
+
+    if (trimmed.startsWith(">")) {
+      closeParagraph();
+      closeList();
+      const quote = trimmed.replace(/^>\s?/, "");
+      if (quote) {
+        html.push(`<blockquote>${inlineMarkdown(quote)}</blockquote>`);
+      }
       continue;
     }
 

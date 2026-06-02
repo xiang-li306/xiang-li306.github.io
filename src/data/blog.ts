@@ -1,4 +1,6 @@
-import sampleMarkdown from "../content/notes/sample-markdown.md?raw";
+import worriesOnAi from "../content/notes/worries-on-ai.md?raw";
+import contextualMultinomialBandits from "../content/notes/contextual-multinomial-bandits.md?raw";
+import roleOfRlInLlmReasoning from "../content/notes/role-of-rl-in-llm-reasoning.md?raw";
 
 export type BlogPost = {
   title: string;
@@ -13,18 +15,38 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
-    title: "Sample Markdown Note",
-    date: "2026-06-01",
+    title: "Worries on AI",
+    date: "2026-05",
     summary:
-      "A sample note rendered from Markdown, including LaTeX math and an image stored with the note assets.",
-    slug: "sample-markdown",
+      "A personal reflection on language models, scaling, reasoning, self-evolution, and the gap between carbon-based and silicon-based intelligence.",
+    slug: "worries-on-ai",
     type: "markdown",
-    content: sampleMarkdown,
-    tags: ["markdown", "latex"],
+    content: worriesOnAi,
+    tags: ["AI", "LLM", "future"],
+  },
+  {
+    title: "The Role of RL in LLM Reasoning",
+    date: "2026-01",
+    summary:
+      "A long-form discussion of whether RLVR sharpens existing reasoning behavior or discovers new reasoning capabilities in language models.",
+    slug: "role-of-rl-in-llm-reasoning",
+    type: "markdown",
+    content: roleOfRlInLlmReasoning,
+    tags: ["RL", "LLM", "reasoning"],
+  },
+  {
+    title: "Contextual Multinomial Bandits",
+    date: "2025-08",
+    summary:
+      "A technical note on contextual multinomial logit bandits, optimistic algorithms, warm-up exploration, and regret analysis.",
+    slug: "contextual-multinomial-bandits",
+    type: "markdown",
+    content: contextualMultinomialBandits,
+    tags: ["bandits", "MNL", "theory"],
   },
   {
     title: "Sample PDF Note",
-    date: "2026-05-15",
+    date: "1999-01",
     summary:
       "A sample PDF note. For now, PDF notes download directly; a browser preview can be added later.",
     slug: "sample-pdf",
