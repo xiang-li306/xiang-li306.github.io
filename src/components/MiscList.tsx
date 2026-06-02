@@ -25,7 +25,18 @@ export function MiscList({ items }: MiscListProps) {
             {item.description}
           </p>
           {item.meta ? (
-            <p className="mt-3 text-sm leading-6 text-ink-500">{item.meta}</p>
+            <p className="mt-3 text-sm leading-6 text-ink-500">
+              {item.href ? (
+                <a
+                  href={item.href}
+                  className="underline decoration-ink-200 hover:text-ink-900 hover:decoration-ink-700"
+                >
+                  {item.meta}
+                </a>
+              ) : (
+                item.meta
+              )}
+            </p>
           ) : null}
         </article>
       ))}

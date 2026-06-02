@@ -3,6 +3,7 @@ export type Publication = {
   authors: string;
   venue: string;
   year: string;
+  highlight?: string;
   note?: string;
   links?: {
     label: string;
@@ -12,21 +13,23 @@ export type Publication = {
 
 export const publications: Publication[] = [
   {
-    title: "A Placeholder Paper on Reliable Learning Systems",
-    authors: "Xiang Li, Collaborator Name",
-    venue: "Preprint",
+    title:
+      "Q-MMR: Off-Policy Evaluation via Recursive Reweighting and Moment Matching",
+    authors: "Xiang Li, Nan Jiang",
+    venue: "arXiv preprint arXiv:2605.06474",
     year: "2026",
-    note: "Replace this entry with a real paper, arXiv preprint, or conference publication.",
-    links: [
-      { label: "paper", href: "#" },
-      { label: "code", href: "#" },
-    ],
+    highlight:
+      "A new off-policy evaluation algorithm based on weight learning, with guarantees under general function approximation that require only function realizability.",
+    links: [{ label: "paper", href: "https://arxiv.org/abs/2605.06474" }],
   },
   {
-    title: "Notes on Algorithms, Models, and Generalization",
-    authors: "Xiang Li",
-    venue: "Working manuscript",
-    year: "2025",
-    links: [{ label: "draft", href: "#" }],
+    title:
+      "Beyond State-Wise Mirror Descent: Offline Policy Optimization with Parametric Policies",
+    authors: "Xiang Li, Yuheng Zhang, Nan Jiang",
+    venue: "arXiv preprint arXiv:2602.23811",
+    year: "2026",
+    highlight:
+      "A unified theory connecting policy-based optimization with value-based offline RL, offering a new perspective on policy-gradient-type methods.",
+    links: [{ label: "paper", href: "https://arxiv.org/abs/2602.23811" }],
   },
 ];

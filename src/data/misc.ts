@@ -7,21 +7,15 @@ export type MiscItem = {
 
 export const miscellaneous: MiscItem[] = [
   {
-    title: "Teaching",
-    description:
-      "Placeholder for teaching assistantships, guest lectures, tutorials, or mentoring.",
-    meta: "Add course names and semesters here.",
-  },
-  {
     title: "Service",
     description:
-      "Placeholder for reviewing, reading groups, student organizations, or conference service.",
-    meta: "Keep this concise and dated.",
+      "Reviewer for ICML 2026 and NeurIPS 2026.",
   },
   {
-    title: "Selected Talks",
+    title: "Bilibili Channel",
     description:
-      "Placeholder for seminar talks, workshop presentations, or invited lectures.",
-    href: "#",
+      "I actively maintain a Bilibili channel with Chinese videos on ML theory, RL theory, DL theory, mathematics, and some personal reflections.",
+    meta: "Channel link",
+    href: "https://space.bilibili.com/32773300?spm_id_from=333.1007.0.0",
   },
 ];

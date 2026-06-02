@@ -19,6 +19,11 @@ export function PublicationList({ publications }: PublicationListProps) {
             <p className="mt-1 text-sm leading-6 text-ink-500">
               {publication.venue}, {publication.year}
             </p>
+            {publication.highlight ? (
+              <p className="mt-2 border-l-2 border-ink-200 pl-3 text-sm leading-6 text-ink-700">
+                {publication.highlight}
+              </p>
+            ) : null}
             {publication.note ? (
               <p className="mt-2 text-sm leading-6 text-ink-700">
                 {publication.note}
