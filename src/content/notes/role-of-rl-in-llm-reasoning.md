@@ -1,6 +1,3 @@
-Xiang Li
-2026.01
-
 Reinforcement learning came roaring back in 2025. One big reason is the rise of "reasoning" post-training: models like OpenAI's o1 series and DeepSeek's R1 are widely seen as benefiting from RL-based training, with noticeable boosts on math, coding, and many other tasks.
 
 But here's the catch: what RL is actually doing in LLM post-training, especially in RLVR, still isn't settled. A lot of 2025 research on LLM reasoning revolves around a deceptively simple question: is RL mostly polishing the base model's existing knowledge (by reweighting the probabilities), or can it truly push the model beyond its original reasoning boundary and unlock new behaviors? In this post, we'll delve into these papers with that "sharpening or discovery" question in mind and take a more careful look on what we can conclude.

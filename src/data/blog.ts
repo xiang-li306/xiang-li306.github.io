@@ -1,6 +1,7 @@
 import worriesOnAi from "../content/notes/worries-on-ai.md?raw";
 import contextualMultinomialBandits from "../content/notes/contextual-multinomial-bandits.md?raw";
 import roleOfRlInLlmReasoning from "../content/notes/role-of-rl-in-llm-reasoning.md?raw";
+import concentrationInequalityCheatsheet from "../content/notes/concentration-inequality-cheatsheet.md?raw";
 
 export type BlogPost = {
   title: string;
@@ -15,16 +16,6 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
-    title: "Understanding LLM Pre-Training and RL Fine-Tuning via Meta-Learning",
-    date: "2026-06",
-    summary:
-      "My undergraduate thesis, written in Chinese, studying LLM pre-training and RL fine-tuning through a meta-learning perspective.",
-    slug: "undergraduate-thesis-meta-learning",
-    type: "pdf",
-    href: "/notes/undergraduate-thesis/llm-pretraining-rl-finetuning-meta-learning.pdf",
-    tags: ["thesis", "Chinese", "LLM"],
-  },
-  {
     title: "Worries on AI",
     date: "2026-05",
     summary:
@@ -32,7 +23,17 @@ export const blogPosts: BlogPost[] = [
     slug: "worries-on-ai",
     type: "markdown",
     content: worriesOnAi,
-    tags: ["AI", "LLM", "future"],
+    tags: ["AI", "LLM", "philosophy"],
+  },
+  {
+    title: "Concentration Inequality Cheatsheet",
+    date: "2026-02",
+    summary:
+      "A compact cheatsheet of common concentration inequalities, including scalar, martingale, matrix, uniform, and heavy-tailed bounds.",
+    slug: "concentration-inequality-cheatsheet",
+    type: "markdown",
+    content: concentrationInequalityCheatsheet,
+    tags: ["math", "concentration"],
   },
   {
     title: "The Role of RL in LLM Reasoning",
@@ -52,6 +53,6 @@ export const blogPosts: BlogPost[] = [
     slug: "contextual-multinomial-bandits",
     type: "markdown",
     content: contextualMultinomialBandits,
-    tags: ["bandits", "MNL", "theory"],
+    tags: ["bandits", "theory"],
   },
 ];

@@ -1,6 +1,20 @@
+import type { MouseEvent } from "react";
+
 type MarkdownViewProps = {
   content: string;
 };
+
+function slugifyHeading(text: string) {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
 
 function escapeHtml(text: string) {
   return text
@@ -15,6 +29,7 @@ function inlineMarkdown(text: string) {
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" />')
+    .replace(/\[([^\]]+)\]\((#[^)]+)\)/g, '<a href="$2" data-note-anchor="$2">$1</a>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 }
 
@@ -22,7 +37,7 @@ function renderMarkdown(content: string) {
   const lines = content.split(/\r?\n/);
   const html: string[] = [];
   let paragraph: string[] = [];
-  let listOpen: "ul" | "ol" | false = false;
+  let listStack: Array<"ul" | "ol"> = [];
   let mathOpen = false;
   let mathLines: string[] = [];
 
@@ -33,10 +48,30 @@ function renderMarkdown(content: string) {
     }
   };
 
-  const closeList = () => {
-    if (listOpen) {
-      html.push(`</${listOpen}>`);
-      listOpen = false;
+  const closeListsTo = (depth = 0) => {
+    while (listStack.length > depth) {
+      const listType = listStack.pop();
+      if (listType) {
+        html.push(`</${listType}>`);
+      }
+    }
+  };
+
+  const openListTo = (type: "ul" | "ol", depth: number) => {
+    while (listStack.length > depth) {
+      const listType = listStack.pop();
+      if (listType) {
+        html.push(`</${listType}>`);
+      }
+    }
+
+    if (listStack[depth] && listStack[depth] !== type) {
+      closeListsTo(depth);
+    }
+
+    while (listStack.length <= depth) {
+      html.push(`<${type}>`);
+      listStack.push(type);
     }
   };
 
@@ -56,75 +91,70 @@ function renderMarkdown(content: string) {
 
     if (trimmed === "$$") {
       closeParagraph();
-      closeList();
+      closeListsTo();
       mathOpen = true;
       continue;
     }
 
     if (!trimmed) {
       closeParagraph();
-      closeList();
+      closeListsTo();
       continue;
     }
 
     if (trimmed.startsWith("#### ")) {
       closeParagraph();
-      closeList();
-      html.push(`<h4>${inlineMarkdown(trimmed.slice(5))}</h4>`);
+      closeListsTo();
+      const heading = trimmed.slice(5);
+      html.push(`<h4 id="${slugifyHeading(heading)}">${inlineMarkdown(heading)}</h4>`);
       continue;
     }
 
     if (trimmed.startsWith("### ")) {
       closeParagraph();
-      closeList();
-      html.push(`<h3>${inlineMarkdown(trimmed.slice(4))}</h3>`);
+      closeListsTo();
+      const heading = trimmed.slice(4);
+      html.push(`<h3 id="${slugifyHeading(heading)}">${inlineMarkdown(heading)}</h3>`);
       continue;
     }
 
     if (trimmed.startsWith("## ")) {
       closeParagraph();
-      closeList();
-      html.push(`<h2>${inlineMarkdown(trimmed.slice(3))}</h2>`);
+      closeListsTo();
+      const heading = trimmed.slice(3);
+      html.push(`<h2 id="${slugifyHeading(heading)}">${inlineMarkdown(heading)}</h2>`);
       continue;
     }
 
     if (trimmed.startsWith("# ")) {
       closeParagraph();
-      closeList();
-      html.push(`<h1>${inlineMarkdown(trimmed.slice(2))}</h1>`);
+      closeListsTo();
+      const heading = trimmed.slice(2);
+      html.push(`<h1 id="${slugifyHeading(heading)}">${inlineMarkdown(heading)}</h1>`);
       continue;
     }
 
-    if (trimmed.startsWith("- ")) {
+    const unorderedListMatch = line.match(/^(\s*)-\s+(.*)$/);
+    if (unorderedListMatch) {
       closeParagraph();
-      if (listOpen && listOpen !== "ul") {
-        closeList();
-      }
-      if (!listOpen) {
-        html.push("<ul>");
-        listOpen = "ul";
-      }
-      html.push(`<li>${inlineMarkdown(trimmed.slice(2))}</li>`);
+      const depth = Math.floor(unorderedListMatch[1].replace(/\t/g, "  ").length / 2);
+      openListTo("ul", depth);
+      html.push(`<li>${inlineMarkdown(unorderedListMatch[2])}</li>`);
       continue;
     }
 
-    const orderedListMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+    const orderedListMatch = line.match(/^(\s*)\d+\.\s+(.*)$/);
     if (orderedListMatch) {
       closeParagraph();
-      if (listOpen && listOpen !== "ol") {
-        closeList();
-      }
-      if (!listOpen) {
-        html.push("<ol>");
-        listOpen = "ol";
-      }
-      html.push(`<li>${inlineMarkdown(orderedListMatch[1])}</li>`);
+      const depth = Math.floor(orderedListMatch[1].replace(/\t/g, "  ").length / 2);
+      openListTo("ol", depth);
+      html.push(`<li>${inlineMarkdown(orderedListMatch[2])}</li>`);
       continue;
     }
 
     if (trimmed.startsWith(">")) {
       closeParagraph();
-      closeList();
+      closeListsTo();
       const quote = trimmed.replace(/^>\s?/, "");
       if (quote) {
         html.push(`<blockquote>${inlineMarkdown(quote)}</blockquote>`);
@@ -136,15 +166,40 @@ function renderMarkdown(content: string) {
   }
 
   closeParagraph();
-  closeList();
+  closeListsTo();
 
   return html.join("\n");
 }
 
 export function MarkdownView({ content }: MarkdownViewProps) {
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    const link = target.closest<HTMLAnchorElement>("a[data-note-anchor]");
+    if (!link) {
+      return;
+    }
+
+    const anchor = link.dataset.noteAnchor?.replace(/^#/, "");
+    if (!anchor) {
+      return;
+    }
+
+    const destination = document.getElementById(anchor);
+    if (destination) {
+      event.preventDefault();
+      destination.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.replaceState(null, "", window.location.hash || window.location.pathname);
+    }
+  };
+
   return (
     <div
       className="markdown-body"
+      onClick={handleClick}
       dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
     />
   );

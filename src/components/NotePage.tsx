@@ -22,10 +22,10 @@ export function NotePage({ post }: NotePageProps) {
   return (
     <article className="mx-auto max-w-3xl">
       <a
-        href="/#notes"
+        href="/#posts"
         className="text-sm font-medium text-ink-700 underline decoration-ink-200 hover:text-ink-900 hover:decoration-ink-700"
       >
-        Back to Blog / Notes
+        Back to Posts
       </a>
       <header className="mt-8 border-b border-ink-200 pb-6">
         <h1 className="text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl">

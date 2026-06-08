@@ -1,5 +1,3 @@
-# Contextual Multinomial Bandits
-
 ## Problem Formulation
 
 At round $t=1,2,\ldots$, the interaction protocol is as follows.
@@ -8,16 +6,16 @@ At round $t=1,2,\ldots$, the interaction protocol is as follows.
 - Based on this contextual information, the agent chooses an action subset $S_t=\{i_1,\ldots,i_l\}\in\mathcal{S}$, where $\mathcal{S}=\{S\subset[N]:|S|\leq K\}$.
 - The agent observes the final decision $c_t\in S_t\cup\{0\}$, where $0$ represents the outside option, and receives the corresponding reward $r_{tc_t}$.
 
-The distribution of these selections follows a multinomial logit (MNL) choice model. For an unknown parameter $\mathbf{w}^*\in\mathbb{R}^d$, the probability of choosing an item $i_t\in S_t$, or the outside option, is
+The distribution of these selections follows a multinomial logit (MNL) choice model. For an unknown parameter $\mathbf{w}^\star\in\mathbb{R}^d$, the probability of choosing an item $i_t\in S_t$, or the outside option, is
 
 $$
-p_t(i_t\mid S_t,\mathbf{w}^*)=
-\frac{\exp(x_{ti_t}^\top \mathbf{w}^*)}
-{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^*)},
+p_t(i_t\mid S_t,\mathbf{w}^\star)=
+\frac{\exp(x_{ti_t}^\top \mathbf{w}^\star)}
+{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^\star)},
 \quad
-p_t(0\mid S_t,\mathbf{w}^*)=
+p_t(0\mid S_t,\mathbf{w}^\star)=
 \frac{1}
-{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^*)}.
+{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^\star)}.
 $$
 
 The choice response for each item $i\in S_t\cup\{0\}$ is defined as $y_{ti}=\mathbb{1}\{c_t=i\}\in\{0,1\}$. Therefore, the choice feedback vector $\mathbf{y}_t$ can be viewed as a single-trial multinomial sample:
@@ -26,12 +24,12 @@ $$
 \mathbf{y}_t\sim\text{Multinomial}(1,\mathbf{p}_t),
 $$
 
-where $\mathbf{p}_t=[p_t(0\mid S_t,\mathbf{w}^*),\ldots,p_t(i_l\mid S_t,\mathbf{w}^*)]$.
+where $\mathbf{p}_t=[p_t(0\mid S_t,\mathbf{w}^\star),\ldots,p_t(i_l\mid S_t,\mathbf{w}^\star)]$.
 
 For each $i\in S_t\cup\{0\}$, define the noise
 
 $$
-\epsilon_{ti}=y_{ti}-p_t(i\mid S_t,\mathbf{w}^*).
+\epsilon_{ti}=y_{ti}-p_t(i\mid S_t,\mathbf{w}^\star).
 $$
 
 Since $y_{ti}$ is bounded, $\epsilon_{ti}$ is centered and bounded; equivalently, it is sub-Gaussian with a constant variance proxy. In particular, under the usual Bernoulli normalization, the variance proxy is at most $1/4$.
@@ -39,17 +37,17 @@ Since $y_{ti}$ is bounded, $\epsilon_{ti}$ is centered and bounded; equivalently
 At round $t$, the reward $r_{ti}$ for each item $i$ is also given, with $r_{t0}\equiv0$. Therefore, the expected reward of choosing set $S$ at round $t$ is
 
 $$
-R_t(S,\mathbf{w}^*)=
-\sum_{i\in S}p_t(i\mid S,\mathbf{w}^*)r_{ti}
+R_t(S,\mathbf{w}^\star)=
+\sum_{i\in S}p_t(i\mid S,\mathbf{w}^\star)r_{ti}
 =
-\frac{\sum_{i\in S}\exp(x_{ti}^\top\mathbf{w}^*)r_{ti}}
-{1+\sum_{j\in S}\exp(x_{tj}^\top \mathbf{w}^*)}.
+\frac{\sum_{i\in S}\exp(x_{ti}^\top\mathbf{w}^\star)r_{ti}}
+{1+\sum_{j\in S}\exp(x_{tj}^\top \mathbf{w}^\star)}.
 $$
 
 Define
 
 $$
-S_t^*=\arg\max_{S\in\mathcal{S}}R_t(S,\mathbf{w}^*).
+S_t^\star=\arg\max_{S\in\mathcal{S}}R_t(S,\mathbf{w}^\star).
 $$
 
 Our goal is to minimize the cumulative pseudo-regret over $T$ rounds:
@@ -58,12 +56,12 @@ $$
 \text{Reg}_T
 =
 \sum_{t=1}^T
-R_t(S_t^*,\mathbf{w}^*)-R_t(S_t,\mathbf{w}^*).
+R_t(S_t^\star,\mathbf{w}^\star)-R_t(S_t,\mathbf{w}^\star).
 $$
 
 Consistent with previous work on contextual MNL bandits, we make the following assumptions.
 
-- Boundedness: assume $\|\mathbf{w}^*\|_2\leq 1$, and for all $t\geq 1$, $i\in[N]$, $\|x_{ti}\|_2\leq 1$ and $0<\rho\leq r_{ti}\leq 1$.
+- Boundedness: assume $\|\mathbf{w}^\star\|_2\leq 1$, and for all $t\geq 1$, $i\in[N]$, $\|x_{ti}\|_2\leq 1$ and $0<\rho\leq r_{ti}\leq 1$.
 - Problem-dependent constant: there exists $0<\kappa\leq 1$ such that for every item $i\in S$, every $S\in\mathcal{S}$, and every round $t$,
 
 $$
@@ -138,7 +136,7 @@ $$
 In this algorithm, $\beta_t(\delta)=\mathcal{O}(\sqrt{d}\log t\log K)$ is the radius of the confidence set. With probability at least $1-\delta$,
 
 $$
-\mathbf{w}^*\in\mathcal{C}_t(\delta)
+\mathbf{w}^\star\in\mathcal{C}_t(\delta)
 :=
 \left\{
 \mathbf{w}\mid
@@ -243,10 +241,10 @@ $$
 \text{Reg}_T
 =
 \sum_{t=1}^T
-R_t(S_t^*,\mathbf{w}^*)-R_t(S_t,\mathbf{w}^*)
+R_t(S_t^\star,\mathbf{w}^\star)-R_t(S_t,\mathbf{w}^\star)
 \leq
 \sum_{t=1}^T
-\tilde{R}_t(S_t)-R_t(S_t,\mathbf{w}^*),
+\tilde{R}_t(S_t)-R_t(S_t,\mathbf{w}^\star),
 $$
 
 where
@@ -257,10 +255,10 @@ $$
 \frac{\sum_{i\in S_t}\exp(\alpha_{ti})}
 {1+\sum_{j\in S_t}\exp(\alpha_{tj})},
 \quad
-R_t(S_t,\mathbf{w}^*)
+R_t(S_t,\mathbf{w}^\star)
 =
-\frac{\sum_{i\in S_t}\exp(x_{ti}^\top\mathbf{w}^*)}
-{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^*)}.
+\frac{\sum_{i\in S_t}\exp(x_{ti}^\top\mathbf{w}^\star)}
+{1+\sum_{j\in S_t}\exp(x_{tj}^\top\mathbf{w}^\star)}.
 $$
 
 Let $Q:\mathbb{R}^K\rightarrow\mathbb{R}$ be
@@ -277,9 +275,9 @@ In the uniform reward setting, $S_t$ always contains $K$ elements, i.e., $S_t=\{
 $$
 \mathbf{u}_t=(\alpha_{ti_1},\ldots,\alpha_{ti_K})^\top,
 \quad
-\mathbf{u}_t^*
+\mathbf{u}_t^\star
 =
-(x_{ti_1}^\top\mathbf{w}^*,\ldots,x_{ti_K}^\top\mathbf{w}^*)^\top.
+(x_{ti_1}^\top\mathbf{w}^\star,\ldots,x_{ti_K}^\top\mathbf{w}^\star)^\top.
 $$
 
 Then the regret can be expressed as
@@ -288,15 +286,15 @@ $$
 \begin{aligned}
 \text{Reg}_T
 &\leq
-\sum_{t=1}^T Q(\mathbf{u}_t)-Q(\mathbf{u}_t^*)\\
+\sum_{t=1}^T Q(\mathbf{u}_t)-Q(\mathbf{u}_t^\star)\\
 &=
 \sum_{t=1}^T
-\nabla Q(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla Q(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 +
 \frac{1}{2}\sum_{t=1}^T
-(\mathbf{u}_t-\mathbf{u}_t^*)^\top
+(\mathbf{u}_t-\mathbf{u}_t^\star)^\top
 \nabla^2 Q(\bar{\mathbf{u}}_t)
-(\mathbf{u}_t-\mathbf{u}_t^*).
+(\mathbf{u}_t-\mathbf{u}_t^\star).
 \end{aligned}
 $$
 
@@ -304,11 +302,11 @@ The first-order error can be bounded by
 
 $$
 \sum_{t=1}^T
-\nabla Q(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla Q(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 2\beta_T(\delta)
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)
 \|x_{ti}\|_{\mathcal{H}_t^{-1}},
 $$
 
@@ -316,9 +314,9 @@ and the second-order error can be bounded by
 
 $$
 \frac{1}{2}\sum_{t=1}^T
-(\mathbf{u}_t-\mathbf{u}_t^*)^\top
+(\mathbf{u}_t-\mathbf{u}_t^\star)^\top
 \nabla^2 Q(\bar{\mathbf{u}}_t)
-(\mathbf{u}_t-\mathbf{u}_t^*)
+(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 10\beta_T(\delta)^2
 \sum_{t=1}^T
@@ -329,7 +327,7 @@ $$
 Here, $\beta_t(\delta)$ is the radius of the $t$-th round confidence set. With probability at least $1-\delta$,
 
 $$
-\mathbf{w}^*\in \mathcal{C}_t(\delta)
+\mathbf{w}^\star\in \mathcal{C}_t(\delta)
 :=
 \left\{
 \mathbf{w}\in\mathcal{W}:
@@ -360,17 +358,17 @@ Here, we use a different analysis: directly apply the Cauchy-Schwarz inequality,
 $$
 \begin{aligned}
 &\sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)
 \|x_{ti}\|_{\mathcal{H}_t^{-1}}\\
 &\leq
 \sqrt{
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)
 }\\
 &\quad\cdot
 \sqrt{
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)
 \|x_{ti}\|_{\mathcal{H}_t^{-1}}^2
 }.
 \end{aligned}
@@ -380,19 +378,19 @@ For the first term, following [Perivier and Goyal, 2022](https://arxiv.org/abs/2
 
 $$
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)
 \leq
-\text{Regret}_T+\sum_{t=1}^T\kappa_t^*,
+\text{Regret}_T+\sum_{t=1}^T\kappa_t^\star,
 \tag{$\star$}
 $$
 
 where
 
 $$
-\kappa_t^*
+\kappa_t^\star
 =
-\sum_{i\in S_t^*}
-p_t(i\mid S_t^*,\mathbf{w}^*)p_t(0\mid S_t^*,\mathbf{w}^*)
+\sum_{i\in S_t^\star}
+p_t(i\mid S_t^\star,\mathbf{w}^\star)p_t(0\mid S_t^\star,\mathbf{w}^\star)
 $$
 
 is a problem-dependent term.
@@ -400,9 +398,9 @@ is a problem-dependent term.
 For the second term, let
 
 $$
-\mathcal{H}_t^*
+\mathcal{H}_t^\star
 =
-\lambda' \mathbf{I}_d+\sum_{s=1}^{t-1}H_s(\mathbf{w}^*).
+\lambda' \mathbf{I}_d+\sum_{s=1}^{t-1}H_s(\mathbf{w}^\star).
 $$
 
 Since $\ell_t(\mathbf{w})$ is a $3\sqrt{2}$-self-concordance-like function, for all $\mathbf{w}_1,\mathbf{w}_2\in\mathcal{W}$,
@@ -418,14 +416,14 @@ $$
 
 This gives credit to the exploration routine, which makes $\text{diam}(\mathcal{W})\leq 1$.
 
-Therefore, setting $\lambda'=e^{3\sqrt{2}}\lambda$, we have $\mathcal{H}_t^*\preceq e^{3\sqrt{2}}\mathcal{H}_t$, which means that $\|x_{ti}\|_{\mathcal{H}_t^{-1}}^2$ can be controlled by $\|x_{ti}\|_{(\mathcal{H}_t^*)^{-1}}^2$ up to this constant. Now we can use the elliptical potential lemma by setting all $\mathbf{w}_{s+1}=\mathbf{w}^*$.
+Therefore, setting $\lambda'=e^{3\sqrt{2}}\lambda$, we have $\mathcal{H}_t^\star\preceq e^{3\sqrt{2}}\mathcal{H}_t$, which means that $\|x_{ti}\|_{\mathcal{H}_t^{-1}}^2$ can be controlled by $\|x_{ti}\|_{(\mathcal{H}_t^\star)^{-1}}^2$ up to this constant. Now we can use the elliptical potential lemma by setting all $\mathbf{w}_{s+1}=\mathbf{w}^\star$.
 
 Plugging in $\beta_T(\delta)=\mathcal{O}(\sqrt{d}\log T)$, we get the quadratic inequality
 
 $$
 \text{Reg}_T
 \lesssim
-d\sqrt{\sum_{t=1}^T\kappa_t^*+\text{Reg}_T}
+d\sqrt{\sum_{t=1}^T\kappa_t^\star+\text{Reg}_T}
 +
 \frac{d^2}{\kappa}.
 $$
@@ -437,7 +435,7 @@ $$
 =
 \tilde{\mathcal{O}}
 \left(
-d\sqrt{\sum_{t=1}^T\kappa_t^*}
+d\sqrt{\sum_{t=1}^T\kappa_t^\star}
 +
 \frac{1}{\kappa}d^2
 \right).
@@ -461,15 +459,15 @@ $$
 \begin{aligned}
 \text{Regret}_T
 &\leq
-\sum_{t=1}^T\tilde{Q}(\mathbf{u}_t)-\tilde{Q}(\mathbf{u}_t^*)\\
+\sum_{t=1}^T\tilde{Q}(\mathbf{u}_t)-\tilde{Q}(\mathbf{u}_t^\star)\\
 &=
 \sum_{t=1}^T
-\nabla \tilde{Q}(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla \tilde{Q}(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 +
 \frac{1}{2}\sum_{t=1}^T
-(\mathbf{u}_t-\mathbf{u}_t^*)^\top
+(\mathbf{u}_t-\mathbf{u}_t^\star)^\top
 \nabla^2 \tilde{Q}(\bar{\mathbf{u}}_t)
-(\mathbf{u}_t-\mathbf{u}_t^*).
+(\mathbf{u}_t-\mathbf{u}_t^\star).
 \end{aligned}
 $$
 
@@ -489,9 +487,9 @@ Therefore, the same second-order bound still holds:
 
 $$
 \frac{1}{2}\sum_{t=1}^T
-(\mathbf{u}_t-\mathbf{u}_t^*)^\top
+(\mathbf{u}_t-\mathbf{u}_t^\star)^\top
 \nabla^2 \tilde{Q}(\bar{\mathbf{u}}_t)
-(\mathbf{u}_t-\mathbf{u}_t^*)
+(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 10\beta_T(\delta)^2
 \sum_{t=1}^T
@@ -503,16 +501,16 @@ The first-order error can be written in two different forms in the non-uniform r
 
 $$
 \sum_{t=1}^T
-\nabla \tilde{Q}(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla \tilde{Q}(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 \beta_T(\delta)
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)
 \left(
 r_{ti}
 -
 \sum_{j\in S_t}
-p_t(j\mid S_t,\mathbf{w}^*)r_{tj}
+p_t(j\mid S_t,\mathbf{w}^\star)r_{tj}
 \right)
 \|x_{ti}\|_{\mathcal{H}_t^{-1}}.
 $$
@@ -521,15 +519,15 @@ In [Lee and Oh, 2024](https://arxiv.org/abs/2502.10020), another form is used to
 
 $$
 \sum_{t=1}^T
-\nabla \tilde{Q}(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla \tilde{Q}(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 \beta_T(\delta)
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)
 \left\|
 x_{ti}
 -
-\mathbb{E}_{j\sim p_t(\cdot\mid S_t,\mathbf{w}^*)}[x_{tj}]
+\mathbb{E}_{j\sim p_t(\cdot\mid S_t,\mathbf{w}^\star)}[x_{tj}]
 \right\|_{\mathcal{H}_t^{-1}}.
 $$
 
@@ -555,7 +553,7 @@ $$
 =
 x_{si}
 -
-\mathbb{E}_{j\sim p_s(\cdot\mid S_s,\mathbf{w}^*)}[x_{sj}],
+\mathbb{E}_{j\sim p_s(\cdot\mid S_s,\mathbf{w}^\star)}[x_{sj}],
 $$
 
 they bound the first-order error using these elliptical potential inequalities. This gives a general regret bound, but it does not enjoy the non-linearity in the leading term; namely, it gives $\text{Reg}_T=\mathcal{O}(d\sqrt{T}+\kappa^{-1}d^2)$ up to logarithmic factors.
@@ -565,18 +563,18 @@ Actually, we can directly upper bound the first-order error by reusing the resul
 $$
 \begin{aligned}
 &\sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)
+p_t(i\mid S_t,\mathbf{w}^\star)
 \left(
 r_{ti}
 -
 \sum_{j\in S_t}
-p_t(j\mid S_t,\mathbf{w}^*)r_{tj}
+p_t(j\mid S_t,\mathbf{w}^\star)r_{tj}
 \right)\\
 &\leq
 \sum_{t=1}^T\sum_{i\in S_t}
-p_t(i\mid S_t,\mathbf{w}^*)p_t(0\mid S_t,\mathbf{w}^*)\\
+p_t(i\mid S_t,\mathbf{w}^\star)p_t(0\mid S_t,\mathbf{w}^\star)\\
 &\leq
-\sum_{t=1}^T\kappa_t^*
+\sum_{t=1}^T\kappa_t^\star
 +
 \text{Reg}_T^\text{u},
 \end{aligned}
@@ -591,9 +589,9 @@ $$
 =
 \sum_{t=1}^T
 \left(
-\sum_{i\in S_t^*}p_t(i\mid S_t^*,\mathbf{w}^*)
+\sum_{i\in S_t^\star}p_t(i\mid S_t^\star,\mathbf{w}^\star)
 -
-\sum_{i\in S_t}p_t(i\mid S_t,\mathbf{w}^*)
+\sum_{i\in S_t}p_t(i\mid S_t,\mathbf{w}^\star)
 \right)r_{ti}
 \leq
 \text{Reg}_T^\text{u}.
@@ -603,13 +601,13 @@ Therefore, we can apply the Cauchy-Schwarz inequality to bound the first-order e
 
 $$
 \sum_{t=1}^T
-\nabla \tilde{Q}(\mathbf{u}_t^*)^\top(\mathbf{u}_t-\mathbf{u}_t^*)
+\nabla \tilde{Q}(\mathbf{u}_t^\star)^\top(\mathbf{u}_t-\mathbf{u}_t^\star)
 \leq
 \beta_T(\delta)
 \left(
 d\log\left(1+\frac{T}{d\lambda}\right)
 \sqrt{
-\sum_{t=1}^T\kappa_t^*
+\sum_{t=1}^T\kappa_t^\star
 +
 \frac{1}{\rho}\text{Reg}_T
 }
@@ -624,7 +622,7 @@ $$
 \tilde{\mathcal{O}}
 \left(
 \frac{d}{\rho}
-\sqrt{\sum_{t=1}^T\kappa_t^*}
+\sqrt{\sum_{t=1}^T\kappa_t^\star}
 +
 \frac{1}{\kappa\rho}d^2
 \right).
@@ -647,7 +645,7 @@ $$
 where $\beta_t(\delta)=\mathcal{O}(\sqrt{d}\log t\log K)$. Then
 
 $$
-\Pr[\forall t\geq 1,\mathbf{w}^*\in\mathcal{C}_t(\delta)]
+\Pr[\forall t\geq 1,\mathbf{w}^\star\in\mathcal{C}_t(\delta)]
 \geq 1-\delta.
 $$
 

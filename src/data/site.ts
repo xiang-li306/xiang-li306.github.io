@@ -17,7 +17,7 @@ export const siteConfig = {
   navigation: [
     { label: "About", href: "#about" },
     { label: "Publications", href: "#publications" },
-    { label: "Blog / Notes", href: "#notes" },
+    { label: "Posts", href: "#posts" },
     { label: "Misc.", href: "#misc" },
   ] satisfies NavigationLink[],
   profile: {
